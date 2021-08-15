@@ -1,0 +1,60 @@
+<template>
+    <header class="p-3 bg-dark text-white">
+    <div class="container">
+      <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+        <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
+          <img width="256" height="52" src="@/assets/icon-left-font-monochrome-white.png">
+        </a>
+
+        <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+          <li><router-link to="/" class="nav-link px-2 text-secondary"><i width="24" class="fa fa-newspaper"></i></router-link></li>
+          <li><a href="#" class="nav-link px-2 text-white"><i class="fa fa-user"></i></a></li>
+        </ul>
+
+        <div class="text-end">
+          <router-link to="/login"><button type="button" class="btn btn-outline-light me-2">Login</button></router-link>
+          <router-link to="/register"><button type="button" class="btn btn-warning">Sign-up</button></router-link>
+        </div>
+      </div>
+    </div>
+  </header>
+</template>
+
+<script>
+
+export default {
+    
+    name: "Header"
+        
+}
+
+</script>
+
+<style scoped>
+
+    .form-control-dark {
+    color: #fff;
+    background-color: var(--bs-dark);
+    border-color: var(--bs-gray);
+    }
+    .form-control-dark:focus {
+    color: #fff;
+    background-color: var(--bs-dark);
+    border-color: #fff;
+    box-shadow: 0 0 0 .25rem rgba(255, 255, 255, .25);
+    }
+
+    .bi {
+    vertical-align: -.125em;
+    fill: currentColor;
+    }
+
+    .text-small {
+    font-size: 85%;
+    }
+
+    .dropdown-toggle {
+    outline: 0;
+    }
+
+</style>
