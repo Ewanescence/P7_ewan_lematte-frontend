@@ -1,24 +1,32 @@
 <template>
 
-    <h1>Accueil</h1>
+    <h1>{{ message }}</h1>
     
 </template>
 
 <script>
 
-import {onMounted} from 'vue'
+import {onMounted, ref} from 'vue'
 
 export default {
     name: "Home",
     setup() {
+        const message = ref('You are not logged in!');
+        
         onMounted( async () => {
-            await fetch('http://localhost:3000/api/login', {
-                method: 'POST',
+            const response = await fetch('http://localhost:3000/api/user', {
                 headers: {'Content-Type': 'application/json'},
-                credentials: 'include',
-                body: JSON.stringify(data)
+                credentials: 'include'
             });
-        })
+
+            const content = await response.json();
+
+            message.value = `Hi ${content.name}`;
+        });
+        
+        return {
+            message
+        }
     }
 }
 
