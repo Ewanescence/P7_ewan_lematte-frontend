@@ -11,9 +11,12 @@
           <li><a href="#" class="nav-link px-2 text-white"><i class="fa fa-user"></i></a></li>
         </ul>
 
-        <div class="text-end">
-          <router-link to="/login"><button type="button" class="btn btn-outline-light me-2">Login</button></router-link>
-          <router-link to="/register"><button type="button" class="btn btn-warning">Sign-up</button></router-link>
+        <div class="text-end" v-if="!auth">
+          <router-link to="/login"><button type="button" class="btn btn-outline-light me-2">Connexion</button></router-link>
+          <router-link to="/register"><button type="button" class="btn btn-warning">S'enregistrer</button></router-link>
+        </div>
+        <div class="text-end" v-if="auth">
+          <button type="button" class="btn btn-outline-light me-2" @click="logout">Déconnexion</button>
         </div>
       </div>
     </div>
@@ -22,9 +25,38 @@
 
 <script>
 
+import {computed} from 'vue'
+import {useStore} from 'vuex'
+import {useRouter} from 'vue-router'
+
 export default {
     
-    name: "Header"
+    name: "Header",
+    setup() {
+        const store = useStore();
+
+        const router = useRouter();
+
+        const auth = computed( () => store.state.authenticated)
+
+        const logout = async () => {
+
+            await fetch('http://localhost:3000/api/logout', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                credentials: 'include'
+            });
+
+            await store.dispatch('setAuth', false)
+
+            setTimeout(function() { router.push('/login') });
+            
+        }
+
+        return {
+            auth, logout
+        }
+    }
         
 }
 
