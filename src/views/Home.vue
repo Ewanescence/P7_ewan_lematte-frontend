@@ -1,42 +1,45 @@
 <template>
 
-    <h1>{{ message }}</h1>
+    <div>
+        <Header />
+        <h1> {{ content }} </h1>
+    </div>
     
 </template>
 
 <script>
 
-import {onMounted, ref} from 'vue'
-import {useStore} from "vuex"
+import {useRouter} from 'vue-router'
+
+import Header from '@/components/Header.vue'
 
 export default {
+  components: { Header },
     name: "Home",
-    setup() {
-        const message = ref('You are not logged in!');
-        const store = useStore();
-        
-        onMounted( async () => {
-            try {
-                const response = await fetch('http://localhost:3000/api/user', {
+    Components: {
+        Header
+    },
+    data() {
+        return {
+            content: '',
+        }
+    },
+    async mounted(){
+
+        const router = useRouter();
+
+        const user = await fetch('http://localhost:3000/api/user', {
                     headers: {'Content-Type': 'application/json'},
                     credentials: 'include'
-                });
-
-                const content = await response.json();
-
-                message.value = `Hi ${content.name}`;
-            
-                await store.dispatch('setAuth', true)
-            } catch (e) {
-                await store.dispatch('setAuth', false)
-            }        
-        });
+        })
         
-        
-        return {
-            message
+        if (user.status == 200) {
+            let data = await user.json()
+            this.content = data.name
+        } else {
+            router.push('/')
         }
-    }
+    },
 }
 
 </script>

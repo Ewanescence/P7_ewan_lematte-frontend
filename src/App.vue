@@ -1,25 +1,26 @@
 <template>
 
-    <Header/>
-
-    <main class="form-signin">
-      <router-view />
-    </main>
+    <!--<Header/>-->
+    <router-view />
 
 </template>
 
 <script>
 
-  import Header from '@/components/Header'
+  //import Header from '@/components/Header'
 
   export default {
-    components: {Header}
+    //components: {Header}
   }
 
 </script>
 
 <style lang="scss">
  
+  html, body, #app{
+    height: 100%;
+  }
+
   // app
 
   #app {
