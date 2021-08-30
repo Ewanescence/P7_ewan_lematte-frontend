@@ -59,13 +59,15 @@ export default {
                 body: JSON.stringify(data)
             });
 
+            let response = await answer.json()
+
             let message = document.getElementById('message')
 
             if (answer.status == 200) { 
                  
                 if (message.classList.contains('alert-danger')) { message.classList.replace('alert-danger', 'alert-success') }
                 else { message.classList.add("alert-success") }
-                message.textContent = "Connexion réussie, redirection..."
+                message.textContent = response.message
                 message.hidden = false
                 store.dispatch('setAuth', true)
                 setTimeout(function() {
@@ -74,7 +76,7 @@ export default {
 
             } else {
 
-                message.textContent = "Aucun compte ne correspond aux identifiants saisis"
+                message.textContent = response.message
                 message.classList.add("alert-danger")
                 message.hidden = false
 

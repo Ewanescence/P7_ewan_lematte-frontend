@@ -1,32 +1,28 @@
 <template>
-
-    <div>
+    <div id="home">
         <Header />
-        <h1> {{ content }} </h1>
+        <Submit :user="user" />
+        <Post />
     </div>
-    
 </template>
 
 <script>
 
-import {useRouter} from 'vue-router'
-
-import Header from '@/components/Header.vue'
+import Header from '@/components/home/parts/Header'
+import Submit from '@/components/home/parts/Submit'
+import Post from '@/components/home/parts/Post'
 
 export default {
-  components: { Header },
     name: "Home",
-    Components: {
-        Header
+    components: {
+        Header, Submit, Post
     },
     data() {
         return {
-            content: '',
+            user: {},
         }
     },
     async mounted(){
-
-        const router = useRouter();
 
         const user = await fetch('http://localhost:3000/api/user', {
                     headers: {'Content-Type': 'application/json'},
@@ -35,9 +31,7 @@ export default {
         
         if (user.status == 200) {
             let data = await user.json()
-            this.content = data.name
-        } else {
-            router.push('/')
+            this.user = data
         }
     },
 }
@@ -45,5 +39,10 @@ export default {
 </script>
 
 <style scoped>
+
+    #home {
+        display: grid;
+        grid-template-rows: 100px auto 1fr;
+    }
 
 </style>
