@@ -23,13 +23,11 @@ export default {
         }
     },
     async mounted(){
-
-
         const user = await fetch('http://localhost:3000/api/user', {
                     headers: {'Content-Type': 'application/json'},
                     credentials: 'include'
         })
-        
+    
         if (user.status == 200) {
             let data = await user.json()
             this.user = data

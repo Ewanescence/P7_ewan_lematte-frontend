@@ -3,12 +3,17 @@
         <div id="posts-body">
             <article v-for="feed in feeds" :key="feed.id">
                 <div id="user-infos">
-                    <img id="user-pic" :src="feed.imageUrl">
+                    <router-link :to="feed.name">
+                        <img id="user-pic" :src="feed.imageUrl">
+                    </router-link>         
                 </div>
                 <div id="post-content">
-                    <span>{{ feed.name }}</span>
+                    <router-link :to="feed.name">
+                        <span>{{ formattedUsername(feed.name) }}</span>
+                    </router-link>   
                     <hr>
                     <p v-if="!!feed.post_content">{{ feed.post_content }}</p>
+                    <img v-if="!!feed.post_media" :src="feed.post_media">
                 </div>
             </article>
         </div> 
@@ -27,13 +32,17 @@
                 author: [],
             }
         },
+        methods: {
+            formattedUsername(name) {
+                const username = name[0].toUpperCase() + name.substring(1)
+                return username
+            }
+        },
         async mounted(){
-
             const posts = await fetch('http://localhost:3000/api/posts', {
                         headers: {'Content-Type': 'application/json'},
                         credentials: 'include'
-            })
-            
+            })    
             if (posts.status == 200) {
                 this.posts = await posts.json()
                 this.posts.forEach( async (value) => {
@@ -100,6 +109,12 @@
         max-height: 512px;
         border-radius: 2px;
         border: 2px solid white;
+    }
+
+    a {
+        text-decoration: none;
+        color: white;
+        font-weight: bold;
     }
 
 </style>
