@@ -34,7 +34,7 @@ export default {
     },
     data() {
       return {
-        sb_collapsed: true
+        sb_collapsed: false
       }
     },
     methods: {
@@ -115,7 +115,7 @@ export default {
     #sidebar {
     height: 100%;
     max-height: 100%;
-    width: 304px;
+    width: 20px;
     transition: 0.5s;
     display: flex;
     justify-content: flex-end;

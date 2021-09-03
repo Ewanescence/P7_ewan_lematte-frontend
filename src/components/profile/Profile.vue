@@ -25,7 +25,7 @@ export default {
   },
   async mounted(){
 
-        const user = await fetch('http://localhost:3000/api/user', {
+        const user = await fetch(process.env.VUE_APP_API_SERVER + 'api/user', {
                     headers: {'Content-Type': 'application/json'},
                     credentials: 'include'
         })

@@ -1,10 +1,7 @@
 <template>
     <div id="home-header" class="p-3 px-2 bg-dark text-white">
         <div id="header-container">
-            <a @click="$router.go(-1)">
-                <i class="fas fa-arrow-left"></i>
-            </a>
-            <h1>| Accueil</h1>
+            <h1>Accueil</h1>
         </div>
     </div>
 </template>

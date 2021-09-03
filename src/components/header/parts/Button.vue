@@ -24,10 +24,10 @@ export default {
 
         const logout = async () => {
 
-          await fetch('http://localhost:3000/api/logout', {
-              method: 'POST',
-              headers: {'Content-Type': 'application/json'},
-              credentials: 'include'
+          await fetch(process.env.VUE_APP_API_SERVER + 'api/logout', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            credentials: 'include'
           });
           
           await store.dispatch('setAuth', false)
