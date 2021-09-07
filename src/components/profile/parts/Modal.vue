@@ -6,22 +6,54 @@
 
           <div class="modal-header">
             <slot name="header">
-              default header
+              <h2>Editer mon profil</h2>
             </slot>
           </div>
 
           <div class="modal-body">
             <slot name="body">
-              default body
+
+              <div class="section">
+                <h3> Médias du profil </h3>
+                <div id="banner-container">
+                  <div id="banner" v-if="user.bannerUrl" :style="{ 'background-image': 'url(' + user.bannerUrl + ')' }" @click="selectBanner">
+                    <i class="fas fa-image"></i>
+                    <input hidden name="banner" ref="profileBanner" type="file" @change="readBanner"> 
+                  </div>
+                  <div id="banner" v-else @click="selectBanner">
+                    <i class="fas fa-image"></i>
+                    <input hidden name="banner" ref="profileBanner" type="file" @change="readBanner"> 
+                  </div>
+                  <div id="picture">
+                    <div id="picture-container">
+                      <i class="fas fa-portrait"></i>
+                      <ProfilePicture :src="user.imageUrl" @click.prevent="selectFile" />
+                      <input hidden name="image" ref="profilePicture" type="file" @change="readURL">
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="section" id="description">
+                <h3> Description </h3>
+                <label for="content"></label>
+                <form method="post" @submit.prevent="submit">
+                  <textarea v-model="description"></textarea>
+                </form>
+              </div>
+
             </slot>
           </div>
 
           <div class="modal-footer">
             <slot name="footer">
-              default footer
-              <button class="modal-default-button" @click="$emit('close')">
-                OK
-              </button>
+              <div id="buttons-left">
+                <button class="btn btn-outline-light me-2" @click="$emit('close')"><i class="fas fa-trash"></i></button>
+              </div>
+              <div id="buttons-right">
+                <button id="submit" class="btn btn-outline-light me-2" type="submit" @click.prevent="submit"><i class="far fa-save"></i></button>
+                <button class="btn btn-outline-light me-2" @click="$emit('close')"><i class="far fa-window-close"></i></button>
+              </div>
             </slot>
           </div>
         </div>
@@ -32,10 +64,94 @@
 
 <script>
 
-    export default {
-        name: 'Modal',
-        props: ['modal'] 
-    }
+  import ProfilePicture from '@/components/general/ProfilePicture'
+
+  import axios from 'axios'
+  
+  export default {
+    name: 'Modal',
+    components: {
+      ProfilePicture
+    },
+    data () {
+      return {
+        description: '',
+        id: ''
+      }
+    },
+    props: ['modal', 'user'],
+    async mounted() {
+      this.description = this.user.description
+      this.id = this.user.id
+    },
+    methods: {
+              submit() {
+                
+                const data = {
+                  description: this.description,
+                  user_id: this.id
+                }
+
+                axios
+                .put(process.env.VUE_APP_API_SERVER + `api/updateProfile`, data, {
+                    headers: {'Content-Type': 'application/json'},
+                })
+                .then(() => {
+                    window.location.reload()
+                })
+                .catch((error) => {
+                    console.log(error)
+                })
+
+            },
+            selectFile(){
+                let fileInputElement = this.$refs.profilePicture
+                fileInputElement.click()
+            },
+            readURL() {
+                
+                this.file = this.$refs.profilePicture.files[0];
+                
+                const data = new FormData()
+                
+                data.append("image", this.file, this.file.name)
+
+                axios
+                .post(process.env.VUE_APP_API_SERVER + `api/changeProfilePicture?username=${this.user.name}`, data, {
+                    headers: {'Content-Type': 'application/json'},
+                })
+                .then(() => {
+                    window.location.reload()
+                })
+                .catch((error) => {
+                    console.log(error)
+                })
+            },
+            selectBanner(){
+                let fileInputElement = this.$refs.profileBanner
+                fileInputElement.click()
+            },
+            readBanner() {
+                
+                this.file = this.$refs.profileBanner.files[0];
+                
+                const data = new FormData()
+                
+                data.append("image", this.file, this.file.name)
+
+                axios
+                .post(process.env.VUE_APP_API_SERVER + `api/changeProfileBanner?username=${this.user.name}`, data, {
+                    headers: {'Content-Type': 'application/json'},
+                })
+                .then(() => {
+                    window.location.reload()
+                })
+                .catch((error) => {
+                    console.log(error)
+                })
+            },
+        }
+  }
 
 </script>
 
@@ -58,29 +174,133 @@
   vertical-align: middle;
 }
 
+.modal-footer {
+  justify-content: space-between;
+}
+
 .modal-container {
-  width: 300px;
+  width: 50%;
   margin: 0px auto;
   padding: 20px 30px;
-  background-color: #fff;
+  background-color: #212529;
+  border: 2px solid white;
   border-radius: 2px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
   transition: all 0.3s ease;
   font-family: Helvetica, Arial, sans-serif;
 }
 
-.modal-header h3 {
-  margin-top: 0;
-  color: #42b983;
+.modal-header {
+    flex-direction: row;
 }
 
-.modal-body {
-  margin: 20px 0;
+.modal-header h2 {
+  margin-top: 0;
+  color: white;
+  text-align: left;
 }
 
 .modal-default-button {
   display: block;
   margin-top: 1rem;
+}
+
+#banner {
+    height: 256px;
+    width: 100%;
+    background-color: red;
+    border-radius: 2px;
+    border: 2px solid white;
+    cursor: pointer;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative;
+}
+
+#banner:hover {
+  filter: grayscale(100%);
+  transition: 0.15s;
+}
+
+#banner i {
+  position: absolute;
+  top: 50%;
+  left: 48.5%;
+  font-size: 32px;
+  color: white;
+  opacity: 0;
+}
+
+#banner:hover > i {
+  opacity: 1;
+  transition: 0.15s;
+}
+
+#picture {
+  position: absolute;
+  bottom: 1rem;
+  left: 1rem;
+  cursor: pointer;
+}
+
+#picture-container {
+  position: relative;
+}
+
+#picture:hover {
+  filter: grayscale(100%);
+  transition: 0.15s;
+}
+
+#picture:hover > #picture-container > i {
+  opacity: 1;
+  transition: 0.15s;
+}
+
+#picture-container i {
+  top: 40%;
+  left: 40%;
+  position: absolute;
+  color: white;
+  opacity: 0;
+  font-size: 16px;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid white;
+}
+
+#banner-container {
+  position: relative;
+}
+
+.section h3 {
+  margin-bottom: 1rem;
+  width: 100%;
+  text-align: left;
+  color: white;
+}
+
+#description {
+  border-bottom: none;
+  margin-top: 1rem;
+}
+
+#description textarea {
+  width: 100%;
+  background-color: rgb(33, 37, 41);
+  color: white;
+  resize: none;
+  padding: 1rem;
+  height: 100%;
+}
+
+::placeholder {
+  color: white;
 }
 
 /*

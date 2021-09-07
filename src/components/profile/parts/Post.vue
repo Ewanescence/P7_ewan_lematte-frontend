@@ -1,40 +1,44 @@
 <template>
     <div id="posts">
-        <div id="posts-header">
-            <h2>Publications</h2>
-            <hr>
-        </div>
         <div id="posts-body">
-            <article v-for="post in posts" :key="post.message">
-                <div id="user-infos">
-                    <img id="user-pic" :src="user.imageUrl">
-                </div>
-                <div id="post-content">
-                    <span>{{ username }}</span>
-                    <hr>
-                    <p v-if="!!post.message">{{ post.message }}</p>
-                    <img v-if="!post.url" :src="post.url">
-                </div>
-            </article>
+            <router-link :to="'/post/' + post.id" v-for="post in posts" :key="post.id">
+                <article>
+                    <div class="user-infos">
+                        <router-link :to="'/profile/' + user.name">
+                            <ProfilePicture :src="user.imageUrl" />
+                            <div class="content-header">
+                                <router-link :to="'/profile/' + user.name">
+                                    <FormattedUsername :name="user.name" />
+                                </router-link>
+                                    <FormattedDate :date="post.createdAt" />
+                            </div>
+                        </router-link>         
+                    </div>
+                    <div class="post-content">
+                        <hr>
+                        <PostContent :content="post.post_content" />
+                        <PostMedia :media="post.post_media" />
+                    </div>
+                </article>
+            </router-link>
         </div> 
     </div>
 </template>
 
 <script>
 
+    import ProfilePicture from '@/components/general/ProfilePicture'
+    import FormattedUsername from '@/components/general/FormattedUsername'
+    import FormattedDate from '@/components/general/FormattedDate'
+    import PostContent from '@/components/general/PostContent'
+    import PostMedia from '@/components/general/PostMedia'
+
     export default {
-        name: 'Post', 
-        props: ['user', 'username'],
-        data () {
-            return {
-                posts: [
-                    {message: 'première publication', url: ''},
-                    {message: '', url: this.user.imageUrl},
-                    {message: 'troisième publication', url: 'https://www.cerballiance.fr/sites/www.cerballiance.fr/files/media/image/2020-12/iStock-1212779887-test-antigenique-achetee.jpg'},
-                    {message: 'troisième publication', url: 'https://www.cerballiance.fr/sites/www.cerballiance.fr/files/media/image/2020-12/iStock-1212779887-test-antigenique-achetee.jpg'}
-                ],
-            }
+        name: 'Post',
+        components: {
+            ProfilePicture, FormattedUsername, FormattedDate, PostContent, PostMedia
         },
+        props: ['posts', 'user'],
     }
 
 </script>
@@ -42,51 +46,52 @@
 <style scoped>
     
     #posts {
-        padding-right: 1rem;
-        padding-left: 1rem;
-        padding-bottom: 1rem;
         border-left: 2px solid white;
         background-color: #212529;
         text-align: left;
-        color: white;
-    }
-
-    #posts-header, #posts-body {
-        margin-left: 32px;
+        border-bottom: none;
     }
 
     #posts-body {
-        border: 1px solid white;
-        border-radius: 3px;
+        border-top: 2px solid white;
+        border-bottom: none;
+        border-left: none;
+        border-right: none;
+    }
+
+    .user-infos {
+        display: flex;
     }
 
     #posts-body article {
-        display: grid;
-        padding: 32px;
         border-bottom: 1px solid white;
-        grid-template-columns: auto 1fr;
         border-radius: 3px;
-        column-gap: 1rem;
+        padding: 32px;
+        padding-left: 3rem;
+    }
+
+    #posts-body article:hover {
+        background-color: #2c2c2c;
+        transition: 0.5s;
+    }
+
+    #posts-body article a {
+        display: grid;
+        grid-template-columns: auto 1fr;
         grid-template-rows: auto 1fr auto;
+        column-gap: 1rem;
     }
 
-    #user-pic {
-        width: 64px;
-        height: 64px;
-        border-radius: 50%;
-        border: 2px solid white;
+    a {
+        text-decoration: none;
+        color: white;
     }
 
-    #post-content p {
-        margin-bottom: 0;
-    }
-
-    #post-content img {
-        margin-top: 1rem;
-        max-width: 512px;
-        max-height: 512px;
-        border-radius: 2px;
-        border: 2px solid white;
+    .content-header {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
     }
 
 </style>

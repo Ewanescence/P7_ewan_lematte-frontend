@@ -10,8 +10,8 @@
         name: 'Header',
         data() {
             return {
-                page: 'profile',
-                title: 'Profil'
+                page: 'post',
+                title: 'Publication'
             }
         },
         components: {

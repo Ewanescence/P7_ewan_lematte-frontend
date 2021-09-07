@@ -29,11 +29,12 @@ a {
     align-items: baseline;
     font-size: 1.25rem;
     padding: 1rem;
+    border-radius: 1.25rem;
 }
 
 a:hover {
-    border-radius: 1.25rem;
-    border: 2px solid white;
+    background-color:#2c2c2c;
+    transition: 0.5s;
 }
 
 .fas {

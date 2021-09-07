@@ -2,8 +2,10 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 
 import Splashscreen from '@/views/Splashscreen.vue'
 import Groupomania from '@/views/Groupomania.vue'
+
 import Home from '@/components/home/Home.vue'
 import Profile from '@/components/profile/Profile.vue'
+import Posts from '@/components/post/Post.vue'
 import Login from '@/components/splashscreen/Login.vue'
 import Register from '@/components/splashscreen/Register.vue'
 
@@ -29,7 +31,10 @@ const routes = [
         path: '/home', component: Home, name: 'home'
       },
       {
-        path: '/:profile', component: Profile, props: true
+        path: '/profile/:username', component: Profile, props: true
+      },
+      {
+        path: '/post/:id', component: Posts, props: true
       }
     ]
   },

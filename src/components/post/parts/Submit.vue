@@ -1,5 +1,5 @@
 <template>
-    <div id="home-submit">
+    <div id="post-submit">
         <form method="post" @submit.prevent="submit">
             <label for="content"></label>
             <textarea :placeholder="placeholder" type="content" id="content" v-model="post.content"/>
@@ -19,6 +19,7 @@
 
     export default {
         name: 'Submit',
+        props: ['id'],
         data() {
             return {
                 user: {
@@ -45,9 +46,9 @@
             if (user.status == 200) {
                 let data = await user.json()
                 this.user = data
+                
                 this.user.name = data.name[0].toUpperCase() + data.name.substring(1)
                 this.post.user_id = data.id
-
             }
         },
         methods: {
@@ -57,13 +58,14 @@
 
                 data.append("content", this.post.content)
                 data.append("user_id", this.post.user_id)
+                data.append("post_id", this.id)
                 
                 if (this.file !== null) {
                     data.append("image", this.file, this.file.name)
                 }
                 
                 axios
-                .post(process.env.VUE_APP_API_SERVER + "api/publish/", data, {
+                .post(process.env.VUE_APP_API_SERVER + `api/commenting`, data, {
                     headers: {'Content-Type': 'application/json'},
                 })
                 .then(() => {
@@ -86,7 +88,7 @@
         },
         computed: {
             placeholder() {
-                return 'Quoi de neuf ' + this.user.name + ' ? 😎'
+                return 'Envie de répondre ' + this.user.name + ' ? 😎'
             }
         }
         
@@ -96,13 +98,12 @@
 
 <style scoped>
 
-#home-submit {
+#post-submit {
     border-left: 2px solid white;
     background-color: #212529;
-    height: 256px;
 }
 
-#home-submit form{
+#post-submit form{
     position: relative;
     height: 100%;
 }
@@ -138,7 +139,6 @@
     border-left: none;
     border-right: none;
     height: 100%;
-    border-top: none;
 }
 
 ::placeholder {

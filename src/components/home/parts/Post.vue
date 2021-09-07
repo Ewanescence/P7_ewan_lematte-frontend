@@ -1,38 +1,40 @@
 <template>
     <div id="posts">
         <div id="posts-body">
-            <article v-for="feed in feeds" :key="feed.id">
-                <div id="user-infos">
-                    <router-link :to="feed.name">
-                        <img id="user-pic" :src="feed.imageUrl">
-                    </router-link>         
-                </div>
-                <div id="post-content">
-                    <router-link :to="feed.name">
-                        <span>{{ formattedUsername(feed.name) }}</span>
-                    </router-link>
-                    <br> 
-                    <span>{{ formattedCreatedAt(feed.createdAt) }}</span>
-                    <hr>
-                    <p v-if="!!feed.post_content">{{ feed.post_content }}</p>
-                    <img v-if="!!feed.post_media" :src="feed.post_media">
-                </div>
-            </article>
+            <router-link :to="'/post/' + feed.id" v-for="feed in feeds" :key="feed.id">
+                <article>
+                    <div class="user-infos">
+                        <router-link :to="'/profile/' + feed.name">
+                            <ProfilePicture :src="feed.imageUrl" />
+                            <div class="content-header">
+                                <router-link :to="'/profile/' + feed.name">
+                                    <span>{{ formattedUsername(feed.name) }}</span>
+                                </router-link>
+                                <span>{{ formattedCreatedAt(feed.createdAt) }}</span>
+                            </div>
+                        </router-link>         
+                    </div>
+                    <div class="post-content">
+                        <hr>
+                        <p v-if="!!feed.post_content">{{ feed.post_content }}</p>
+                        <img v-if="!!feed.post_media" :src="feed.post_media">
+                    </div>
+                </article>
+            </router-link>
         </div> 
     </div>
 </template>
 
 <script>
 
+    import ProfilePicture from '@/components/general/ProfilePicture'
+
     export default {
-        name: 'Post', 
-        data () {
-            return {
-                feeds: [],
-                posts: [],
-                author: [],
-            }
+        name: 'Post',
+        components: {
+            ProfilePicture
         },
+        props: ['feeds'],
         methods: {
             formattedUsername(name) {
                 const username = name[0].toUpperCase() + name.substring(1)
@@ -96,27 +98,7 @@
 
                 return 'le ' + splitedDate.day + month + ' à ' + splitedDate.hours + ':' + splitedDate.minutes 
             }
-        },
-        async mounted(){
-            const posts = await fetch(process.env.VUE_APP_API_SERVER + 'api/posts', {
-                        headers: {'Content-Type': 'application/json'},
-                        credentials: 'include'
-            })    
-            if (posts.status == 200) {
-                this.posts = await posts.json()
-                this.posts.forEach( async (post) => {
-                    const author = await fetch(process.env.VUE_APP_API_SERVER + 'api/author', {
-                        method: 'POST',
-                        headers: {'Content-Type': 'application/json'},
-                        credentials: 'include',
-                        body: JSON.stringify(post)
-                    })
-                    this.author = await author.json()
-                    var obj = {...post, ...this.author}
-                    await this.feeds.push(obj)
-                })
-            }
-        },
+        }
     }
 
 </script>
@@ -127,42 +109,37 @@
         border-left: 2px solid white;
         background-color: #212529;
         text-align: left;
-        color: white;
-    }
-
-    #posts-header {
-        margin-left: 32px;
     }
 
     #posts-body {
         border: 1px solid white;
         border-left: none;
         border-right: none;
-        border-radius: 3px;
     }
 
     #posts-body article {
-        display: grid;
-        padding: 32px;
         border-bottom: 1px solid white;
-        grid-template-columns: auto 1fr;
         border-radius: 3px;
-        column-gap: 1rem;
+        padding: 32px;
+    }
+
+    #posts-body article:hover {
+        background-color: #2c2c2c;
+        transition: 0.5s;
+    }
+
+    #posts-body article a {
+        display: grid;
+        grid-template-columns: auto 1fr;
         grid-template-rows: auto 1fr auto;
+        column-gap: 1rem;
     }
 
-    #user-pic {
-        width: 64px;
-        height: 64px;
-        border-radius: 50%;
-        border: 2px solid white;
-    }
-
-    #post-content p {
+    .post-content p {
         margin-bottom: 0;
     }
 
-    #post-content img {
+    .post-content img {
         margin-top: 1rem;
         max-width: 512px;
         max-height: 512px;
@@ -173,7 +150,20 @@
     a {
         text-decoration: none;
         color: white;
+    }
+
+    .content-header {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .content-header a {
         font-weight: bold;
+    }
+
+    .content-header a:hover {
+        text-decoration: underline;
     }
 
 </style>

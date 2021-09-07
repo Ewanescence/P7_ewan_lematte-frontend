@@ -1,26 +1,26 @@
 <template>
     <div id="profile-user">
-        <div id="banner">    
-        </div>
+        <div id="banner" v-if="user.bannerUrl" :style="{ 'background-image': 'url(' + user.bannerUrl + ')' }"></div>
+        <div id="banner" v-else></div>
         <div id="infos">
             <div id="infos-header">
                 <div id="header-pic">
                     <div id="pic-container">
-                        <img id="user-pic" :src="imageUrl">
+                        <ProfilePicture :src="user.imageUrl" />
                     </div>
                 </div>
                 <div id="header-settings">
-                    <button type="button" class="btn btn-outline-light" @click="showModal"><i class="fas fa-user-cog"></i> Editer mon profil</button>
-                    <Modal v-if="modal" @close="showModal" />
+                    <button type="button" class="btn btn-outline-light" @click="showModal"><i class="fas fa-user-cog"></i></button>
+                    <Modal v-if="modal" @close="showModal" :user="user" />
                 </div>
             </div>
             <div id="infos-body">
                 <div id="user-name">
-                    <span>{{ formattedUsername }}</span>
+                    <FormattedUsername :name="user.name" />
                 </div>
                 <hr>
                 <div id="user-desc">
-                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ea voluptas reiciendis ratione iste, ullam nihil voluptatum nulla distinctio perferendis dolorem ad odit omnis dolores pariatur, corporis explicabo provident quia a?</p>
+                    <p>{{ user.description }}</p>
                 </div>
             </div>
         </div>
@@ -30,22 +30,19 @@
 <script>
 
     import Modal from '@/components/profile/parts/Modal'
+    import ProfilePicture from '@/components/general/ProfilePicture'
+    import FormattedUsername from '@/components/general/FormattedUsername'
 
     export default {
         name: 'User',
-        props: ['imageUrl', 'username'],
+        props: ['user'],
         components: {
-            Modal
+            Modal, ProfilePicture, FormattedUsername
         },
         data() {
         return {
-                modal: false
-            }
-        },
-        computed: {
-            formattedUsername: function () {
-                const username = this.username
-                return '@' + username
+                modal: false,
+                isReceived: false
             }
         },
         methods: {
@@ -79,6 +76,9 @@
     background-color: red;
     border-radius: 2px;
     border: 2px solid white;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 
 #infos {
@@ -102,14 +102,14 @@
     height: 50px;
 }
 
-#user-pic {
+#user-name span:hover {
+    text-decoration: none;
+}
+
+.user-pic {
     position: absolute;
     top: -82px;
     left: 32px;
-    width: 128px;
-    height: 128px;
-    border-radius: 50%;
-    border: 2px solid white;
 }
 
 #user-desc {

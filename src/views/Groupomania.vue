@@ -31,7 +31,7 @@ export default {
         if (user.status == 200) {
             let data = await user.json()
             this.user = data
-            this.profile = data.name
+            this.profile = "/profile/" + data.name
         }
     },
 }

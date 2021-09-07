@@ -2,7 +2,7 @@
     <div id="home">
         <Header />
         <Submit />
-        <Post />
+        <Post :feeds="feeds" />
     </div>
 </template>
 
@@ -16,6 +16,33 @@ export default {
     name: "Home",
     components: {
         Header, Submit, Post
+    },
+    data () {
+        return {
+            feeds: [],
+            posts: [],
+            author: [],
+        }
+    },
+    async mounted(){
+        const posts = await fetch(process.env.VUE_APP_API_SERVER + 'api/posts', {
+            headers: {'Content-Type': 'application/json'},
+            credentials: 'include'
+        })    
+        if (posts.status == 200) {
+            this.posts = await posts.json()
+            this.posts.forEach( async (post) => {
+                const author = await fetch(process.env.VUE_APP_API_SERVER + 'api/author', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    credentials: 'include',
+                    body: JSON.stringify(post)
+                })
+                this.author = await author.json()
+                var obj = {...post, ...this.author}
+                await this.feeds.push(obj)
+            })
+        }
     }
 }
 
