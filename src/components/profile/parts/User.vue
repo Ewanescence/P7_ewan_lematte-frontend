@@ -6,17 +6,17 @@
             <div id="infos-header">
                 <div id="header-pic">
                     <div id="pic-container">
-                        <ProfilePicture :src="user.imageUrl" />
+                        <ProfilePicture :src="user.imageUrl" :width="128" :height="128" />
                     </div>
-                </div>
-                <div id="header-settings">
-                    <button type="button" class="btn btn-outline-light" @click="showModal"><i class="fas fa-user-cog"></i></button>
-                    <Modal v-if="modal" @close="showModal" :user="user" />
                 </div>
             </div>
             <div id="infos-body">
                 <div id="user-name">
                     <FormattedUsername :name="user.name" />
+                    <div id="header-settings">
+                    <button v-if="isOwner" type="button" class="btn btn-outline-light" @click="showModal"><i class="fas fa-user-cog"></i></button>
+                    <Modal v-if="modal && isOwner" @close="showModal" :user="user" />
+                </div>
                 </div>
                 <hr>
                 <div id="user-desc">
@@ -35,14 +35,13 @@
 
     export default {
         name: 'User',
-        props: ['user'],
+        props: ['user', 'isOwner'],
         components: {
             Modal, ProfilePicture, FormattedUsername
         },
         data() {
         return {
-                modal: false,
-                isReceived: false
+                modal: false
             }
         },
         methods: {
@@ -63,71 +62,92 @@
 
 <style scoped>
 
-#profile-user {
-    padding-top: 1rem;
-    padding-right: 1rem;
-    padding-left: 1rem;
-    border-left: 2px solid white;
-    background-color: #212529;
-}
+    #profile-user {
+        background-color: #212529;
+    }
 
-#banner {
-    height: 256px;
-    background-color: red;
-    border-radius: 2px;
-    border: 2px solid white;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-}
+    #banner {
+        height: 128px;
+        background-color: red;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
 
-#infos {
-    display: grid;
-    grid-template-rows: auto auto 1fr;
-    row-gap: 1rem;
-}
+    #infos {
+        padding: 1rem;
+    }
 
-#infos-header {
-    grid-row: 1/2;
-    display: flex;
-    justify-content: space-between;
-}
+    #header-pic {
+        position: relative;
+    }
 
-#header-pic {
-    position: relative;
-}
+    #pic-container {
+        margin: 0 auto;
+        height: 50px;
+    }
 
-#pic-container {
-    margin: 0 auto;
-    height: 50px;
-}
+    #user-name {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+    }
 
-#user-name span:hover {
-    text-decoration: none;
-}
+    #user-name span:hover {
+        text-decoration: none;
+    }
 
-.user-pic {
-    position: absolute;
-    top: -82px;
-    left: 32px;
-}
+    .user-pic {
+        position: absolute;
+        bottom: 0.5rem;
+        left: 1rem;
+        border: 4px solid #212529;
+    }
 
-#user-desc {
-    max-width: 512px;
-}
+    #user-desc {
+        max-width: 512px;
+    }
 
-#header-settings {
-    padding-top: 0.5rem;
-}
+    #header-settings {
+        padding-top: 0.5rem;
+    }
 
-#infos-body{
-    grid-row: 2/3;
-    padding-left: 32px;
-    color: white;
-    display: flex;
-    row-gap: 1rem;
-    text-align: left;
-    flex-direction: column;
-}
+    #infos-body{
+        grid-row: 2/3;
+        color: white;
+        row-gap: 1rem;
+        text-align: left;
+    }
+
+    @media screen and (min-width: 640px) { 
+        #profile-user {
+            border-left: 2px solid white;
+        }
+
+        #infos-body {
+            padding-left: 32px;
+        }
+
+        #banner {
+            height: 256px;
+        }
+    }
+
+    @media screen and (max-width: 640px) { 
+        .user-pic {
+            width: 64px;
+            height: 64px;
+            bottom: 0.75rem;
+            left: 0.15rem;
+        }
+
+        #pic-container {
+            height: 25px;
+        }
+
+        #user-name {
+            height: 25px;
+        }
+    }
 
 </style>

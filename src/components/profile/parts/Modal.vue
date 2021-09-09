@@ -27,7 +27,7 @@
                   <div id="picture">
                     <div id="picture-container">
                       <i class="fas fa-portrait"></i>
-                      <ProfilePicture :src="user.imageUrl" @click.prevent="selectFile" />
+                      <ProfilePicture :src="user.imageUrl" @click.prevent="selectFile" :width="64" :height="64" />
                       <input hidden name="image" ref="profilePicture" type="file" @change="readURL">
                     </div>
                   </div>
@@ -48,10 +48,10 @@
           <div class="modal-footer">
             <slot name="footer">
               <div id="buttons-left">
-                <button class="btn btn-outline-light me-2" @click="$emit('close')"><i class="fas fa-trash"></i></button>
+                <button class="btn btn-outline-danger me-2" @click="deleteProfile"><i class="fas fa-trash"></i></button>
               </div>
               <div id="buttons-right">
-                <button id="submit" class="btn btn-outline-light me-2" type="submit" @click.prevent="submit"><i class="far fa-save"></i></button>
+                <button id="submit" class="btn btn-outline-success me-2" type="submit" @click.prevent="submit"><i class="far fa-save"></i></button>
                 <button class="btn btn-outline-light me-2" @click="$emit('close')"><i class="far fa-window-close"></i></button>
               </div>
             </slot>
@@ -81,8 +81,10 @@
     },
     props: ['modal', 'user'],
     async mounted() {
+      
       this.description = this.user.description
       this.id = this.user.id
+
     },
     methods: {
               submit() {
@@ -93,7 +95,7 @@
                 }
 
                 axios
-                .put(process.env.VUE_APP_API_SERVER + `api/updateProfile`, data, {
+                .put(process.env.VUE_APP_API_SERVER + `api/user/update`, data, {
                     headers: {'Content-Type': 'application/json'},
                 })
                 .then(() => {
@@ -102,6 +104,41 @@
                 .catch((error) => {
                     console.log(error)
                 })
+
+            },
+            deleteProfile() {
+
+              axios
+              .delete(process.env.VUE_APP_API_SERVER + `api/comments/delete/user?id=${this.user.id}`, {
+                headers: {'Content-Type': 'application/json'},
+                withCredentials: true
+              })
+              .then(() => {
+                axios
+                .delete(process.env.VUE_APP_API_SERVER + `api/posts/delete/user?id=${this.user.id}`, {
+                  headers: {'Content-Type': 'application/json'},
+                  withCredentials: true
+                })
+                .then(() => {
+                  axios
+                  .delete(process.env.VUE_APP_API_SERVER + `api/user/delete?id=${this.user.id}`, {
+                    headers: {'Content-Type': 'application/json'},
+                    withCredentials: true
+                  })
+                  .then(() => {
+                    this.$router.push('/')
+                  })
+                  .catch((error) => {
+                    console.log(error)
+                  })
+                })
+                .catch((error) => {
+                  console.log(error)
+                })
+              })
+              .catch((error) => {
+                console.log(error)
+              })
 
             },
             selectFile(){
@@ -117,7 +154,7 @@
                 data.append("image", this.file, this.file.name)
 
                 axios
-                .post(process.env.VUE_APP_API_SERVER + `api/changeProfilePicture?username=${this.user.name}`, data, {
+                .put(process.env.VUE_APP_API_SERVER + `api/user/picture?username=${this.user.name}`, data, {
                     headers: {'Content-Type': 'application/json'},
                 })
                 .then(() => {
@@ -140,7 +177,7 @@
                 data.append("image", this.file, this.file.name)
 
                 axios
-                .post(process.env.VUE_APP_API_SERVER + `api/changeProfileBanner?username=${this.user.name}`, data, {
+                .put(process.env.VUE_APP_API_SERVER + `api/user/banner?username=${this.user.name}`, data, {
                     headers: {'Content-Type': 'application/json'},
                 })
                 .then(() => {
@@ -179,7 +216,8 @@
 }
 
 .modal-container {
-  width: 50%;
+  width: 85%;
+  max-width: 728px;
   margin: 0px auto;
   padding: 20px 30px;
   background-color: #212529;
@@ -206,7 +244,7 @@
 }
 
 #banner {
-    height: 256px;
+    height: 128px;
     width: 100%;
     background-color: red;
     border-radius: 2px;
@@ -239,7 +277,7 @@
 
 #picture {
   position: absolute;
-  bottom: 1rem;
+  bottom: 25%;
   left: 1rem;
   cursor: pointer;
 }

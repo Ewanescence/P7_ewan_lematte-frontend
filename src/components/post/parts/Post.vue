@@ -3,15 +3,20 @@
     <div id="post-container">
         <div class="user-infos">
             <router-link :to="'/profile/' + post.name">
-                <ProfilePicture :src="post.imageUrl" />
-            </router-link>             
+                <ProfilePicture :src="post.imageUrl" :width="64" :height="64" />
+            </router-link>
+            <div class="content-header">
+                <router-link :to="'/profile/' + post.name">
+                    <FormattedUsername v-if="isReceived" :name="post.name" />
+                </router-link>
+                <br>
+                <FormattedDate v-if="isReceived" :date="post.createdAt" />
+            </div>
+            <div class="content-options">
+                <button v-if="post.isOwner" id="submit" class="btn btn-outline-danger me-2" type="submit" @click.prevent="deletePost(post.id)"><i class="fas fa-trash-alt"></i></button>
+            </div>          
         </div>
         <div class="post-content">
-            <router-link :to="'/profile/' + post.name">
-                <FormattedUsername v-if="isReceived" :name="post.name" />
-            </router-link>
-            <br>
-            <FormattedDate v-if="isReceived" :date="post.createdAt" />
             <hr>
             <PostContent :content="post.post_content" />
             <PostMedia :media="post.post_media" />
@@ -29,6 +34,8 @@
     import PostContent from '@/components/general/PostContent'
     import PostMedia from '@/components/general/PostMedia'
 
+    import axios from 'axios'
+
     export default {
         name: 'Post',
         components: { 
@@ -38,10 +45,11 @@
         data () {
             return {
                 post: {},
-                isReceived: false
+                isReceived: false,
+                isOwner: false
             }
         },
-        async created(){
+        async mounted(){
             const post = await fetch(process.env.VUE_APP_API_SERVER + `api/post?id=${this.id}`, {
                         headers: {'Content-Type': 'application/json'},
                         credentials: 'include'
@@ -49,9 +57,42 @@
             if (post.status == 200) {
                 
                 let answer = await post.json()
-                this.post = {...answer.post, ...answer.user}
+                
+                const owner = await fetch(process.env.VUE_APP_API_SERVER + `api/user/owner?id=${answer.post.user_id}`, {
+                    method: 'GET',
+                    headers: {'Content-Type': 'application/json'},
+                    credentials: 'include'
+                })
+
+                this.post = {...answer.post, isOwner: owner.ok, ...answer.user}
 
                 this.isReceived = true
+            }
+        },
+        methods: {
+            deletePost(post) {
+            
+                axios
+                .delete(process.env.VUE_APP_API_SERVER + `api/comments/delete/post?id=${post}`, {
+                    headers: {'Content-Type': 'application/json'},
+                    withCredentials: true
+                })
+                .then(() => {
+                    axios
+                    .delete(process.env.VUE_APP_API_SERVER + `api/post/delete?id=${post}`, {
+                        headers: {'Content-Type': 'application/json'},
+                        withCredentials: true
+                    })
+                    .then(() => {
+                        this.$router.push('/home')
+                    })
+                    .catch((error) => {
+                        console.log(error)
+                    })
+                })
+                .catch((error) => {
+                    console.log(error)
+                })
             }
         }
     }
@@ -61,17 +102,12 @@
 <style scoped>
     
     #post-container {
-        border-left: 2px solid white;
         background-color: #212529;
         text-align: left;
         color: white;
         border-bottom: 1px solid white;
         border-radius: 3px;
         padding: 32px;
-        display: grid;
-        grid-template-columns: auto 1fr;
-        grid-template-rows: auto 1fr auto;
-        column-gap: 1rem
     }
 
     #posts-body {
@@ -85,15 +121,23 @@
         border-bottom: 1px solid white;
         border-radius: 3px;
         padding: 32px;
-        display: grid;
-        grid-template-columns: auto 1fr;
-        grid-template-rows: auto 1fr auto;
-        column-gap: 1rem;
     }
 
     a {
         text-decoration: none;
         color: white;
+    }
+
+    .user-infos {
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        grid-template-rows: auto 1fr auto;
+        column-gap: 1rem;
+    }
+
+    .content-options {
+        display: flex;
+        align-items: center;
     }
 
     .post-content a {
@@ -102,6 +146,12 @@
 
     .post-content a:hover {
         text-decoration: underline;
+    }
+
+    @media screen and (min-width: 640px) { 
+        #post-container {
+            border-left: 2px solid white;
+        }
     }
 
 </style>

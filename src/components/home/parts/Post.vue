@@ -5,22 +5,26 @@
                 <article>
                     <div class="user-infos">
                         <router-link :to="'/profile/' + feed.name">
-                            <ProfilePicture :src="feed.imageUrl" />
-                            <div class="content-header">
-                                <router-link :to="'/profile/' + feed.name">
-                                    <span>{{ formattedUsername(feed.name) }}</span>
-                                </router-link>
-                                <span>{{ formattedCreatedAt(feed.createdAt) }}</span>
-                            </div>
-                        </router-link>         
+                            <ProfilePicture :src="feed.imageUrl" :width="64" :height="64" />
+                        </router-link>   
+                        <div class="content-header">
+                            <router-link :to="'/profile/' + feed.name">
+                                <FormattedUsername :name="feed.name" />
+                            </router-link>
+                            <FormattedDate :date="feed.createdAt" />
+                        </div>
+                        <div class="content-options">
+                            <button v-if="feed.isOwner" id="submit" class="btn btn-outline-danger me-2" type="submit" @click.prevent="deletePost(feed.id)"><i class="fas fa-trash-alt"></i></button>
+                        </div>      
                     </div>
                     <div class="post-content">
                         <hr>
-                        <p v-if="!!feed.post_content">{{ feed.post_content }}</p>
-                        <img v-if="!!feed.post_media" :src="feed.post_media">
+                        <PostContent :content="feed.post_content" />
+                        <PostMedia :media="feed.post_media" />
                     </div>
                 </article>
             </router-link>
+            <EoC />
         </div> 
     </div>
 </template>
@@ -28,85 +32,54 @@
 <script>
 
     import ProfilePicture from '@/components/general/ProfilePicture'
+    import FormattedDate from '@/components/general/FormattedDate'
+    import FormattedUsername from '@/components/general/FormattedUsername'
+    import PostContent from '@/components/general/PostContent'
+    import PostMedia from '@/components/general/PostMedia'
+    import EoC from '@/components/general/EoC'
+
+    import axios from 'axios'
 
     export default {
         name: 'Post',
-        components: {
-            ProfilePicture
+        components: { 
+            ProfilePicture, FormattedDate, FormattedUsername, PostContent, PostMedia, EoC
         },
         props: ['feeds'],
         methods: {
-            formattedUsername(name) {
-                const username = name[0].toUpperCase() + name.substring(1)
-                return username
-            },
-            formattedCreatedAt(createdAt) {
-               
-                const date = createdAt.split('T')
-                const splitDate = date[0].split('-')
-                const splitTime = date[1].split(':')
-                
-                const splitedDate = {
-                    'year': splitDate[0],
-                    'month': splitDate[1],
-                    'day': splitDate[2],
-                    'hours': splitTime[0],
-                    'minutes':splitTime[1],
-                    'seconds': splitTime[2].substring(0,2)
-                }
-
-                let month = ''
-                switch (splitedDate.month) {
-                    case '01':
-                        month = ' janvier'
-                        break
-                    case '02':
-                        month = ' février'
-                        break
-                    case '03':
-                        month = ' mars'
-                        break
-                    case '04':
-                        month = ' avril'
-                        break
-                    case '05':
-                        month = ' mai'
-                        break
-                    case '06':
-                        month = ' juin'
-                        break
-                    case '07':
-                        month = ' juillet'
-                        break
-                    case '08':
-                        month = ' août'
-                        break
-                    case '09':
-                        month = ' septembre'
-                        break
-                    case '10':
-                        month = ' octobre'
-                        break
-                    case '11':
-                        month = ' novembre'
-                        break
-                    case '12':
-                        month = ' décembre'
-                        break
-                }
-
-
-                return 'le ' + splitedDate.day + month + ' à ' + splitedDate.hours + ':' + splitedDate.minutes 
+            deletePost(post) {
+                axios
+                .delete(process.env.VUE_APP_API_SERVER + `api/comments/delete/post?id=${post}`, {
+                    headers: {'Content-Type': 'application/json'},
+                    withCredentials: true
+                })
+                .then(() => {
+                    axios
+                    .delete(process.env.VUE_APP_API_SERVER + `api/post/delete?id=${post}`, {
+                        headers: {'Content-Type': 'application/json'},
+                        withCredentials: true
+                    })
+                    .then(() => {
+                        window.location.reload()
+                    })
+                    .catch((error) => {
+                        console.log(error)
+                    })
+                })
+                .catch((error) => {
+                    console.log(error)
+                })
             }
         }
     }
+
+    
 
 </script>
 
 <style scoped>
     
     #posts {
-        border-left: 2px solid white;
         background-color: #212529;
         text-align: left;
     }
@@ -128,11 +101,17 @@
         transition: 0.5s;
     }
 
-    #posts-body article a {
+    .user-infos {
         display: grid;
-        grid-template-columns: auto 1fr;
+        grid-template-columns: auto 1fr auto;
         grid-template-rows: auto 1fr auto;
         column-gap: 1rem;
+        align-items: center;
+    }
+
+    .content-options {
+        display: flex;
+        align-items: center;
     }
 
     .post-content p {
@@ -164,6 +143,18 @@
 
     .content-header a:hover {
         text-decoration: underline;
+    }
+
+    @media screen and (min-width: 640px) { 
+        #posts {
+            border-left: 2px solid white;
+        }
+    }
+
+    @media screen and (max-width: 640px) { 
+        #posts {
+            margin-bottom: 2.5rem;
+        }
     }
 
 </style>

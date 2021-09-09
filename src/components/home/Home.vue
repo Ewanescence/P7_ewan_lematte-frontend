@@ -2,7 +2,7 @@
     <div id="home">
         <Header />
         <Submit />
-        <Post :feeds="feeds" />
+        <Post :feeds="feeds"/>
     </div>
 </template>
 
@@ -21,25 +21,36 @@ export default {
         return {
             feeds: [],
             posts: [],
-            author: [],
+            author: []
         }
     },
     async mounted(){
+
         const posts = await fetch(process.env.VUE_APP_API_SERVER + 'api/posts', {
             headers: {'Content-Type': 'application/json'},
             credentials: 'include'
         })    
+
         if (posts.status == 200) {
             this.posts = await posts.json()
             this.posts.forEach( async (post) => {
-                const author = await fetch(process.env.VUE_APP_API_SERVER + 'api/author', {
-                    method: 'POST',
+
+                const owner = await fetch(process.env.VUE_APP_API_SERVER + `api/user/owner?id=${post.user_id}`, {
+                    method: 'GET',
                     headers: {'Content-Type': 'application/json'},
-                    credentials: 'include',
-                    body: JSON.stringify(post)
+                    credentials: 'include'
                 })
+
+                const author = await fetch(process.env.VUE_APP_API_SERVER + `api/post/author?id=${post.user_id}`, {
+                    method: 'GET',
+                    headers: {'Content-Type': 'application/json'},
+                    credentials: 'include'
+                })
+
                 this.author = await author.json()
-                var obj = {...post, ...this.author}
+
+                var obj = {...post, isOwner: owner.ok, ...this.author}
+
                 await this.feeds.push(obj)
             })
         }
@@ -52,7 +63,7 @@ export default {
 
     #home {
         display: grid;
-        grid-template-rows: 100px auto 1fr;
+        grid-template-rows: auto auto 1fr;
     }
 
 </style>

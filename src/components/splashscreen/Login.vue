@@ -52,7 +52,7 @@ export default {
         const auth = computed( () => store.state.authenticated)
 
         const submit = async () => {
-            const answer = await fetch(process.env.VUE_APP_API_SERVER + 'api/login', {
+            const answer = await fetch(process.env.VUE_APP_API_SERVER + 'api/user/login', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 credentials: 'include',

@@ -50,7 +50,7 @@ export default {
         const router = useRouter();
 
         const submit = async () => {
-            const answer = await fetch(process.env.VUE_APP_API_SERVER + 'api/register', {
+            const answer = await fetch(process.env.VUE_APP_API_SERVER + 'api/user/register', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify(data)

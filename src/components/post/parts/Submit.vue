@@ -6,9 +6,9 @@
             <div id="media">
                 <input hidden name="image" ref="file" type="file" @change="readURL">
                 <img v-if="post.media.url" id="preview" :src="post.media.url" alt="" />
-                <button class="btn btn-outline-light me-2" @click.prevent="selectFile" ><i class="fas fa-photo-video"></i></button>
+                <button class="btn btn-outline-primary me-2" @click.prevent="selectFile" ><i class="fas fa-photo-video"></i></button>
             </div>
-            <button id="submit" class="btn btn-outline-light me-2" type="submit" @click.prevent="submit">Publier</button>
+            <button id="submit" class="btn btn-outline-success me-2" type="submit" @click.prevent="submit"><i class="fas fa-paper-plane"></i></button>
         </form>
     </div>
 </template>
@@ -38,7 +38,7 @@
         },
         async mounted(){
 
-            const user = await fetch(process.env.VUE_APP_API_SERVER + 'api/user', {
+            const user = await fetch(process.env.VUE_APP_API_SERVER + 'api/user/auth', {
                         headers: {'Content-Type': 'application/json'},
                         credentials: 'include'
             })
@@ -65,7 +65,7 @@
                 }
                 
                 axios
-                .post(process.env.VUE_APP_API_SERVER + `api/commenting`, data, {
+                .post(process.env.VUE_APP_API_SERVER + `api/comment/publish`, data, {
                     headers: {'Content-Type': 'application/json'},
                 })
                 .then(() => {
@@ -98,51 +98,56 @@
 
 <style scoped>
 
-#post-submit {
-    border-left: 2px solid white;
-    background-color: #212529;
-}
+    #post-submit {
+        background-color: #212529;
+    }
 
-#post-submit form{
-    position: relative;
-    height: 100%;
-}
+    #post-submit form{
+        position: relative;
+        height: 100%;
+    }
 
-#submit {
-    position: absolute;
-    bottom: 32px;
-    right: 32px;
-}
+    #submit {
+        position: absolute;
+        bottom: 32px;
+        right: 32px;
+    }
 
-#media {
-    position: absolute;
-    bottom: 32px;
-    left: 32px;
-}
+    #media {
+        position: absolute;
+        bottom: 32px;
+        left: 32px;
+    }
 
-#preview {
-    position: absolute;
-    bottom: 0;
-    left: 64px; 
-    width: 64px;
-    height: 64px;
-    border: 2px solid white;
-    border-radius: 2px;
-}
+    #preview {
+        position: absolute;
+        bottom: 0;
+        left: 64px; 
+        width: 64px;
+        height: 64px;
+        border: 2px solid white;
+        border-radius: 2px;
+    }
 
-#content {
-    width: 100%;
-    background-color: rgb(33, 37, 41);
-    color: white;
-    resize: none;
-    padding: 2rem;
-    border-left: none;
-    border-right: none;
-    height: 100%;
-}
+    #content {
+        width: 100%;
+        background-color: rgb(33, 37, 41);
+        color: white;
+        resize: none;
+        padding: 2rem;
+        border-left: none;
+        border-right: none;
+        height: 100%;
+    }
 
-::placeholder {
-    color: white;
-}
+    ::placeholder {
+        color: white;
+    }
+
+    @media screen and (min-width: 640px) { 
+        #post-submit {
+            border-left: 2px solid white;
+        }
+    }
 
 </style>

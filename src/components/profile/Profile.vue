@@ -1,8 +1,8 @@
 <template>
   <div id="profile">
     <Header />
-    <User v-if="isReceived" :user="user" />
-    <Post :posts="posts" :user="user"/>
+    <User v-if="isReceived" :user="user" :isOwner="isOwner" />
+    <Post :posts="posts" :user="user" :isOwner="isOwner" />
   </div>
 </template>
 
@@ -24,18 +24,22 @@ export default {
       return {
         user: [],
         posts: [],
-        isReceived: false
+        isReceived: false,
+        isOwner: false
       }
   },
-  mounted(){
+  async mounted(){
+        
         axios
-        .get(process.env.VUE_APP_API_SERVER + `api/getProfile?username=${this.username}`, {
+        .get(process.env.VUE_APP_API_SERVER + `api/user/?username=${this.username}`, {
           headers: {'Content-Type': 'application/json'},
         })
-        .then((user) => {
+        .then(async (user) => {
+          
           this.user = user.data
+          
           axios
-          .get(process.env.VUE_APP_API_SERVER + `api/postsFrom?id=${user.data.id}`, {
+          .get(process.env.VUE_APP_API_SERVER + `api/posts/user?id=${user.data.id}`, {
             headers: {'Content-Type': 'application/json'},
           })
           .then((posts) => {
@@ -45,10 +49,22 @@ export default {
           .catch((error) => {
             console.log(error)
           })
+          
+
+          const owner = await fetch(process.env.VUE_APP_API_SERVER + `api/user/owner?id=${user.data.id}`, {
+                    method: 'GET',
+                    headers: {'Content-Type': 'application/json'},
+                    credentials: 'include'
+          })
+
+          this.isOwner = owner.ok
+
         })
-        .catch((error) => {
-          console.log(error)
-        })
+      .catch((error) => {
+        console.log(error)
+      })
+
+  
     }
 }
 </script>
@@ -57,7 +73,7 @@ export default {
 
   #profile {
     display: grid;
-    grid-template-rows: 100px auto 1fr;
+    grid-template-rows: auto auto 1fr;
   }
 
 </style>

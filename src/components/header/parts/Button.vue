@@ -1,7 +1,7 @@
 <template>
     <div id="logout">
         <hr>
-        <button type="button" class="btn btn-outline-light me-2" @click="logout"><i :class="icon"></i></button>
+        <button type="button" class="btn btn-outline-danger me-2" @click="logout"><i :class="icon"></i></button>
     </div>
 </template>
 
@@ -24,7 +24,7 @@ export default {
 
         const logout = async () => {
 
-          await fetch(process.env.VUE_APP_API_SERVER + 'api/logout', {
+          await fetch(process.env.VUE_APP_API_SERVER + 'api/user/logout', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             credentials: 'include'

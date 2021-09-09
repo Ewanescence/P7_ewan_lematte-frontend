@@ -39,5 +39,10 @@
     margin: auto;
   }
 
+  a {
+        text-decoration: none;
+        color: white;
+    }
+
 </style>
 

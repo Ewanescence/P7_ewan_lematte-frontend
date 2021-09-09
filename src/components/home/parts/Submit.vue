@@ -8,7 +8,7 @@
                 <img v-if="post.media.url" id="preview" :src="post.media.url" alt="" />
                 <button class="btn btn-outline-light me-2" @click.prevent="selectFile" ><i class="fas fa-photo-video"></i></button>
             </div>
-            <button id="submit" class="btn btn-outline-light me-2" type="submit" @click.prevent="submit">Publier</button>
+            <button id="submit" class="btn btn-outline-success me-2" type="submit" @click.prevent="submit"><i class="fas fa-paper-plane"></i></button>
         </form>
     </div>
 </template>
@@ -37,7 +37,7 @@
         },
         async mounted(){
 
-            const user = await fetch(process.env.VUE_APP_API_SERVER + 'api/user', {
+            const user = await fetch(process.env.VUE_APP_API_SERVER + 'api/user/auth', {
                         headers: {'Content-Type': 'application/json'},
                         credentials: 'include'
             })
@@ -47,7 +47,6 @@
                 this.user = data
                 this.user.name = data.name[0].toUpperCase() + data.name.substring(1)
                 this.post.user_id = data.id
-
             }
         },
         methods: {
@@ -63,7 +62,7 @@
                 }
                 
                 axios
-                .post(process.env.VUE_APP_API_SERVER + "api/publish/", data, {
+                .post(process.env.VUE_APP_API_SERVER + "api/post/publish", data, {
                     headers: {'Content-Type': 'application/json'},
                 })
                 .then(() => {
@@ -97,7 +96,6 @@
 <style scoped>
 
 #home-submit {
-    border-left: 2px solid white;
     background-color: #212529;
     height: 256px;
 }
@@ -143,6 +141,12 @@
 
 ::placeholder {
     color: white;
+}
+
+@media screen and (min-width: 640px) { 
+    #home-submit {
+        border-left: 2px solid white;
+    }
 }
 
 </style>

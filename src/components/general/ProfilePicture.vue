@@ -1,12 +1,12 @@
 <template>
-    <img class="user-pic" :src="src">
+    <img class="user-pic" :width="width" :height="height" :src="src">
 </template>
 
 <script>
 
 export default {
     name: "ProfilePicture",
-    props: ['src']
+    props: ['src', 'width', 'height']
 }
 
 </script>
@@ -14,10 +14,8 @@ export default {
 <style scoped>
 
     img {
-            width: 64px;
-            height: 64px;
-            border-radius: 50%;
-            border: 2px solid white;
+        border-radius: 50%;
+        border: 2px solid white;
     }
 
 </style>

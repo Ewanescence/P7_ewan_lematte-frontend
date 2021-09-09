@@ -1,8 +1,8 @@
 <template>
 
-    <div id="logged_in">
+    <div id="groupomania">
         <Header :profile="profile" />
-        <router-view />
+        <router-view :key="$route.fullPath"/>
     </div>
     
 </template>
@@ -23,7 +23,7 @@ export default {
         }
     },
     async mounted(){
-        const user = await fetch(process.env.VUE_APP_API_SERVER + 'api/user', {
+        const user = await fetch(process.env.VUE_APP_API_SERVER + 'api/user/auth', {
                     headers: {'Content-Type': 'application/json'},
                     credentials: 'include'
         })
@@ -38,12 +38,24 @@ export default {
 
 </script>
 
-<style scoped>
+<style>
 
-#logged_in {
-    display: grid;
-    height: 100%;
-    grid-template-columns: auto 1fr auto;
-}
+    #groupomania {
+        display: grid;
+        height: 100%;
+        grid-template-columns: auto 1fr auto;
+    }
+
+    .post-content img, .comment-content img {
+        width: 100%;
+    }
+
+    @media screen and (max-width: 640px) {
+        #groupomania {
+            height: 100%;
+            grid-template-columns: 1fr;
+            grid-template-rows: 1fr auto;
+        }
+    }
 
 </style>

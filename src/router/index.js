@@ -25,16 +25,17 @@ const routes = [
   {
     path: '/home', 
     component: Groupomania,
+    name: 'home',
     meta: { requiresAuth: true },
     children: [
       {
         path: '/home', component: Home, name: 'home'
       },
       {
-        path: '/profile/:username', component: Profile, props: true
+        path: '/profile/:username', name: 'profile', component: Profile, props: true
       },
       {
-        path: '/post/:id', component: Posts, props: true
+        path: '/post/:id', name: 'post', component: Posts, props: true
       }
     ]
   },
@@ -47,7 +48,7 @@ const router = createRouter({
 
 router.beforeEach( async (to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
-    const user = await fetch(process.env.VUE_APP_API_SERVER + 'api/user', {
+    const user = await fetch(process.env.VUE_APP_API_SERVER + 'api/user/auth', {
       headers: {'Content-Type': 'application/json'},
       credentials: 'include'
     })
