@@ -1,7 +1,7 @@
 <template>
     <div id="post">
         <Header />
-        <Post :id="id" :isOwner="isOwner" />
+        <Post :id="id"/>
         <Submit :id="id" />
         <Comment :id="id" />
     </div>
@@ -19,22 +19,7 @@ export default {
     components: {
         Header, Post, Submit, Comment
     },
-    data() {
-        return {
-            isOwner: false
-        }
-    },
     props: ['id'],
-    async mounted() {
-        const owner = await fetch(process.env.VUE_APP_API_SERVER + `api/user/owner?id=${this.id}`, {
-            method: 'GET',
-            headers: {'Content-Type': 'application/json'},
-            credentials: 'include'
-        })
-
-        this.isOwner = owner.ok
-        
-    }
 }
 
 </script>

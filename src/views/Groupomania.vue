@@ -18,11 +18,11 @@ export default {
     },
     data() {
         return {
-            user: {},
             profile: ''
         }
     },
     async mounted(){
+        
         const user = await fetch(process.env.VUE_APP_API_SERVER + 'api/user/auth', {
                     headers: {'Content-Type': 'application/json'},
                     credentials: 'include'
@@ -30,7 +30,6 @@ export default {
     
         if (user.status == 200) {
             let data = await user.json()
-            this.user = data
             this.profile = "/profile/" + data.name
         }
     },

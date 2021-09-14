@@ -33,6 +33,7 @@ export default {
         axios
         .get(process.env.VUE_APP_API_SERVER + `api/user/?username=${this.username}`, {
           headers: {'Content-Type': 'application/json'},
+          withCredentials: true
         })
         .then(async (user) => {
           
@@ -41,6 +42,7 @@ export default {
           axios
           .get(process.env.VUE_APP_API_SERVER + `api/posts/user?id=${user.data.id}`, {
             headers: {'Content-Type': 'application/json'},
+            withCredentials: true
           })
           .then((posts) => {
             this.posts = posts.data
@@ -50,7 +52,6 @@ export default {
             console.log(error)
           })
           
-
           const owner = await fetch(process.env.VUE_APP_API_SERVER + `api/user/owner?id=${user.data.id}`, {
                     method: 'GET',
                     headers: {'Content-Type': 'application/json'},

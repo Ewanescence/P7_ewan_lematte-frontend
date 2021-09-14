@@ -28,7 +28,7 @@ export default {
 
 
     .router-link-exact-active {
-            color: red;
+            color: #dc3545;
     }
 
 </style>

@@ -1,7 +1,7 @@
 <template>
     <div id="profile-user">
-        <div id="banner" v-if="user.bannerUrl" :style="{ 'background-image': 'url(' + user.bannerUrl + ')' }"></div>
-        <div id="banner" v-else></div>
+        <img id="banner" v-if="user.bannerUrl" :src="bannerUrl">
+        <img id="banner" v-else>
         <div id="infos">
             <div id="infos-header">
                 <div id="header-pic">
@@ -55,6 +55,11 @@
                         break
                 }
             }
+        },
+        computed: {
+            bannerUrl() {
+                return process.env.VUE_APP_API_SERVER + this.user.bannerUrl
+            }
         }
     }
 
@@ -68,10 +73,8 @@
 
     #banner {
         height: 128px;
-        background-color: red;
-        background-position: center;
-        background-repeat: no-repeat;
-        background-size: cover;
+        object-fit: cover;
+        width: 100%;
     }
 
     #infos {

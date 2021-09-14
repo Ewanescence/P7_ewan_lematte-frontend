@@ -1,6 +1,6 @@
 <template>
 
-    <img v-if="!!media" :src="media">
+    <img v-if="!!media" :src="mediaUrl">
    
 </template>
 
@@ -8,7 +8,12 @@
 
     export default {
         name: 'PostMedia',
-        props: ['media']
+        props: ['media'],
+        computed: {
+            mediaUrl() {
+                return process.env.VUE_APP_API_SERVER + this.media
+            }
+        }
     }
 
 </script>

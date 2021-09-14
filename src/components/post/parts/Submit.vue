@@ -67,6 +67,7 @@
                 axios
                 .post(process.env.VUE_APP_API_SERVER + `api/comment/publish`, data, {
                     headers: {'Content-Type': 'application/json'},
+                    withCredentials: true
                 })
                 .then(() => {
                     window.location.reload()

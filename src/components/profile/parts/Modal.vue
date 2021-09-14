@@ -16,7 +16,7 @@
               <div class="section">
                 <h3> Médias du profil </h3>
                 <div id="banner-container">
-                  <div id="banner" v-if="user.bannerUrl" :style="{ 'background-image': 'url(' + user.bannerUrl + ')' }" @click="selectBanner">
+                  <div id="banner" v-if="user.bannerUrl" :style="{ 'background-image': 'url(' + bannerUrl + ')' }" @click="selectBanner">
                     <i class="fas fa-image"></i>
                     <input hidden name="banner" ref="profileBanner" type="file" @change="readBanner"> 
                   </div>
@@ -97,6 +97,7 @@
                 axios
                 .put(process.env.VUE_APP_API_SERVER + `api/user/update`, data, {
                     headers: {'Content-Type': 'application/json'},
+                    withCredentials: true
                 })
                 .then(() => {
                     window.location.reload()
@@ -125,8 +126,15 @@
                     headers: {'Content-Type': 'application/json'},
                     withCredentials: true
                   })
-                  .then(() => {
-                    this.$router.push('/')
+                  .then((res) => {
+                    switch (res.data.role) {
+                      case 'moderator':
+                        this.$router.push('/home')
+                        break
+                      case 'user' :
+                        this.$router.push('/')
+                        break
+                    }
                   })
                   .catch((error) => {
                     console.log(error)
@@ -156,6 +164,7 @@
                 axios
                 .put(process.env.VUE_APP_API_SERVER + `api/user/picture?username=${this.user.name}`, data, {
                     headers: {'Content-Type': 'application/json'},
+                    withCredentials: true
                 })
                 .then(() => {
                     window.location.reload()
@@ -179,6 +188,7 @@
                 axios
                 .put(process.env.VUE_APP_API_SERVER + `api/user/banner?username=${this.user.name}`, data, {
                     headers: {'Content-Type': 'application/json'},
+                    withCredentials: true
                 })
                 .then(() => {
                     window.location.reload()
@@ -187,6 +197,11 @@
                     console.log(error)
                 })
             },
+        },
+        computed: {
+            bannerUrl() {
+                return process.env.VUE_APP_API_SERVER + this.user.bannerUrl
+            }
         }
   }
 
