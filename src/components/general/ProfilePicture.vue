@@ -1,5 +1,5 @@
 <template>
-    <img class="user-pic" :width="width" :height="height" :src="pictureUrl">
+    <img class="user-pic" alt="Photo de profil" :width="width" :height="height" :src="pictureUrl">
 </template>
 
 <script>

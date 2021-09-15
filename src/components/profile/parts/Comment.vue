@@ -1,7 +1,7 @@
 <template>
-    <div id="posts">
-        <div id="posts-body">
-            <router-link :to="'/post/' + post.id" v-for="post in posts" :key="post.id">
+    <div id="comments">
+        <div id="comments-body">
+            <router-link :to="'/post/' + comment.post_id" v-for="comment in comments" :key="comment.id">
                 <article>
                     <div class="user-infos">
                         <router-link :to="'/profile/' + user.name">
@@ -11,16 +11,16 @@
                             <router-link :to="'/profile/' + user.name">
                                 <FormattedUsername :name="user.name" />
                             </router-link>
-                                <FormattedDate :date="post.createdAt" />
+                                <FormattedDate :date="comment.createdAt" />
                         </div>
                         <div class="content-options">
-                            <button v-if="isOwner" aria-label="Suppression" id="submit" class="btn btn-outline-danger me-2" type="submit" @click.prevent="deletePost(post.id)"><i class="fas fa-trash-alt"></i></button>
+                            <button v-if="isOwner" aria-label="Suppression" id="submit" class="btn btn-outline-danger me-2" type="submit" @click.prevent="deleteComment(comment.id)"><i class="fas fa-trash-alt"></i></button>
                         </div>       
                     </div>
                     <div class="post-content">
                         <hr>
-                        <PostContent :content="post.post_content" />
-                        <PostMedia :media="post.post_media" />
+                        <PostContent :content="comment.comment_content" />
+                        <PostMedia :media="comment.comment_media" />
                     </div>
                 </article>
             </router-link>
@@ -45,27 +45,16 @@
         components: {
             ProfilePicture, FormattedUsername, FormattedDate, PostContent, PostMedia, EoC
         },
-        props: ['posts', 'user', 'isOwner'],
+        props: ['comments', 'user', 'isOwner'],
         methods: {
-            deletePost(post) {
-            
+            deleteComment(comment) {
                 axios
-                .delete(process.env.VUE_APP_API_SERVER + `api/comments/delete/post?id=${post}`, {
+                .delete(process.env.VUE_APP_API_SERVER + `api/comment/delete?id=${comment}`, {
                     headers: {'Content-Type': 'application/json'},
                     withCredentials: true
                 })
                 .then(() => {
-                    axios
-                    .delete(process.env.VUE_APP_API_SERVER + `api/post/delete?id=${post}`, {
-                        headers: {'Content-Type': 'application/json'},
-                        withCredentials: true
-                    })
-                    .then(() => {
-                        window.location.reload()
-                    })
-                    .catch((error) => {
-                        console.log(error)
-                    })
+                    window.location.reload()
                 })
                 .catch((error) => {
                     console.log(error)
@@ -78,26 +67,26 @@
 
 <style scoped>
     
-    #posts {
+    #comments {
         background-color: #212529;
         text-align: left;
         border-bottom: none;
     }
 
-    #posts-body {
+    #comments-body {
         border-top: 2px solid white;
         border-bottom: none;
         border-left: none;
         border-right: none;
     }
 
-    #posts-body article {
+    #comments-body article {
         border-bottom: 1px solid white;
         border-radius: 3px;
         padding: 1rem;
     }
 
-    #posts-body article:hover {
+    #comments-body article:hover {
         background-color: #2c2c2c;
         transition: 0.5s;
     }
@@ -129,11 +118,11 @@
     }
     
     @media screen and (min-width: 640px) { 
-        #posts {
+        #comments {
             border-left: 2px solid white;
         }
 
-        #posts-body article {
+        #comments-body article {
             padding-left: 3rem;
         }
     }
@@ -144,7 +133,7 @@
             height: 48px;
         }
 
-        #posts {
+        #comments {
             margin-bottom: 3rem;
         }
     }

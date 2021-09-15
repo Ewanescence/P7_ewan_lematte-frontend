@@ -12,7 +12,7 @@
         </nav>
         <Button icon="fas fa-sign-out-alt" />
       </div>
-      <button id="collapse" type="button" class="btn" @click="collapse">
+      <button id="collapse" aria-label="Menu latéral" type="button" class="btn" @click="collapse">
         <i v-if="sb_collapsed" class="fas fa-angle-left"></i>
         <i v-if="!sb_collapsed" class="fas fa-angle-right"></i>
       </button>

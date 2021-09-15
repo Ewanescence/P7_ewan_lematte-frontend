@@ -2,7 +2,7 @@
     
     <div class="modal-content rounded-5 shadow">
         <div class="modal-header p-5 pb-4 border-bottom-0">
-            <img width="256" src="@/assets/icon-left-font-monochrome-black.png" />  
+            <img width="256" alt="Logo Groupomania Noir" src="@/assets/icon-left-font-monochrome-black.png" />  
             <hr class="my-4">
             <h2 class="fw-bold mb-0">Connexion</h2>
         </div>
@@ -17,11 +17,11 @@
                     <label for="floatingPassword">Mot de passe</label>
                 </div>
                 <div hidden id="message" class="alert" role="alert"></div>
-                <button class="w-100 mb-2 btn btn-lg rounded-4 btn-primary" type="submit">Se connecter</button>
+                <button class="w-100 mb-2 btn btn-lg rounded-4 btn-primary" aria-label="Connexion" type="submit">Se connecter</button>
                 <hr class="my-4">
                 <h2 class="fs-5 fw-bold mb-3">Pas encore de compte ? 😔</h2>
                 <router-link to="/register">
-                    <button type="button" class="w-100 py-2 mb-2 btn btn-outline-dark rounded-4">S'inscrire</button>
+                    <button type="button" aria-label="Inscription" class="w-100 py-2 mb-2 btn btn-outline-dark rounded-4">S'inscrire</button>
                 </router-link>
             </form>
         </div>

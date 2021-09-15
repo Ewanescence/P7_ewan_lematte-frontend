@@ -5,10 +5,11 @@
             <textarea :placeholder="placeholder" type="content" id="content" v-model="post.content"/>
             <div id="media">
                 <input hidden name="image" ref="file" type="file" @change="readURL">
-                <img v-if="post.media.url" id="preview" :src="post.media.url" alt="" />
-                <button class="btn btn-outline-light me-2" @click.prevent="selectFile" ><i class="fas fa-photo-video"></i></button>
+                <img v-if="post.media.url" id="preview" :src="post.media.url" alt="prévisualisation d'image" />
+                <button aria-label="Téléchargement" class="btn btn-outline-light me-2" @click.prevent="selectFile" ><i class="fas fa-photo-video"></i></button>
             </div>
-            <button id="submit" class="btn btn-outline-success me-2" type="submit" @click.prevent="submit"><i class="fas fa-paper-plane"></i></button>
+            <button v-if="post.content.length == 0" disabled aria-label="Publication" id="submit" class="btn btn-outline-success me-2" type="submit" @click.prevent="submit"><i class="fas fa-paper-plane"></i></button>
+            <button v-else aria-label="Publication" id="submit" class="btn btn-outline-success me-2" type="submit" @click.prevent="submit"><i class="fas fa-paper-plane"></i></button>
         </form>
     </div>
 </template>
@@ -52,26 +53,25 @@
         methods: {
             submit() {
 
-                const data = new FormData()
-
-                data.append("content", this.post.content)
-                data.append("user_id", this.post.user_id)
-                
-                if (this.file !== null) {
-                    data.append("image", this.file, this.file.name)
+                if(this.post.content.length > 0) {
+                    const data = new FormData()
+                    data.append("content", this.post.content)
+                    data.append("user_id", this.post.user_id)
+                    if (this.file !== null) {
+                        data.append("image", this.file, this.file.name)
+                    }
+                    axios
+                    .post(process.env.VUE_APP_API_SERVER + "api/post/publish", data, {
+                        headers: {'Content-Type': 'application/json'},
+                        withCredentials: true
+                    })
+                    .then(() => {
+                        window.location.reload()
+                    })
+                    .catch((error) => {
+                        console.log(error)
+                    })
                 }
-                
-                axios
-                .post(process.env.VUE_APP_API_SERVER + "api/post/publish", data, {
-                    headers: {'Content-Type': 'application/json'},
-                    withCredentials: true
-                })
-                .then(() => {
-                    window.location.reload()
-                })
-                .catch((error) => {
-                    console.log(error)
-                })
 
             },
             selectFile(){

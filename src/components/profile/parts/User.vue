@@ -1,7 +1,7 @@
 <template>
     <div id="profile-user">
-        <img id="banner" v-if="user.bannerUrl" :src="bannerUrl">
-        <img id="banner" v-else>
+        <img id="banner" v-if="user.bannerUrl" alt="Bannière du profil" :src="bannerUrl">
+        <div id="banner" v-else></div>
         <div id="infos">
             <div id="infos-header">
                 <div id="header-pic">
@@ -14,7 +14,7 @@
                 <div id="user-name">
                     <FormattedUsername :name="user.name" />
                     <div id="header-settings">
-                    <button v-if="isOwner" type="button" class="btn btn-outline-light" @click="showModal"><i class="fas fa-user-cog"></i></button>
+                    <button v-if="isOwner" aria-label="Personnalisation" type="button" class="btn btn-outline-light" @click="showModal"><i class="fas fa-user-cog"></i></button>
                     <Modal v-if="modal && isOwner" @close="showModal" :user="user" />
                 </div>
                 </div>
@@ -75,6 +75,7 @@
         height: 128px;
         object-fit: cover;
         width: 100%;
+        background-color: red;
     }
 
     #infos {

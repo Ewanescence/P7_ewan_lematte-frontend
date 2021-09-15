@@ -14,7 +14,7 @@
                             <FormattedDate :date="feed.createdAt" />
                         </div>
                         <div class="content-options">
-                            <button v-if="feed.isOwner" id="submit" class="btn btn-outline-danger me-2" type="submit" @click.prevent="deletePost(feed.id)"><i class="fas fa-trash-alt"></i></button>
+                            <button v-if="feed.isOwner" aria-label="Suppression" id="submit" class="btn btn-outline-danger me-2" type="submit" @click.prevent="deletePost(feed.id)"><i class="fas fa-trash-alt"></i></button>
                         </div>      
                     </div>
                     <div class="post-content">

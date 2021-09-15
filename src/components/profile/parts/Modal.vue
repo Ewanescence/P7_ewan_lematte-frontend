@@ -48,11 +48,11 @@
           <div class="modal-footer">
             <slot name="footer">
               <div id="buttons-left">
-                <button class="btn btn-outline-danger me-2" @click="deleteProfile"><i class="fas fa-trash"></i></button>
+                <button class="btn btn-outline-danger me-2" aria-label="Suppression" @click="deleteProfile"><i class="fas fa-trash"></i></button>
               </div>
               <div id="buttons-right">
-                <button id="submit" class="btn btn-outline-success me-2" type="submit" @click.prevent="submit"><i class="far fa-save"></i></button>
-                <button class="btn btn-outline-light me-2" @click="$emit('close')"><i class="far fa-window-close"></i></button>
+                <button id="submit" aria-label="Fermerture" class="btn btn-outline-success me-2" type="submit" @click.prevent="submit"><i class="far fa-save"></i></button>
+                <button class="btn btn-outline-light me-2" aria-label="Fermeture" @click="$emit('close')"><i class="far fa-window-close"></i></button>
               </div>
             </slot>
           </div>

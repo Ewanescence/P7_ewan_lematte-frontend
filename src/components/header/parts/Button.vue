@@ -1,7 +1,7 @@
 <template>
     <div id="logout">
         <hr>
-        <button type="button" class="btn btn-outline-danger me-2" @click="logout"><i :class="icon"></i></button>
+        <button type="button" aria-label="Déconnexion" class="btn btn-outline-danger me-2" @click="logout"><i :class="icon"></i></button>
     </div>
 </template>
 

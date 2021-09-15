@@ -1,6 +1,6 @@
 <template>
 
-    <img v-if="!!media" :src="mediaUrl">
+    <img v-if="!!media" alt="media de la publication" :src="mediaUrl">
    
 </template>
 

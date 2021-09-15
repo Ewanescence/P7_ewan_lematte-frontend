@@ -13,7 +13,7 @@
                 <FormattedDate v-if="isReceived" :date="post.createdAt" />
             </div>
             <div class="content-options">
-                <button v-if="post.isOwner" id="submit" class="btn btn-outline-danger me-2" type="submit" @click.prevent="deletePost(post.id)"><i class="fas fa-trash-alt"></i></button>
+                <button v-if="post.isOwner" aria-label="Suppression" id="submit" class="btn btn-outline-danger me-2" type="submit" @click.prevent="deletePost(post.id)"><i class="fas fa-trash-alt"></i></button>
             </div>          
         </div>
         <div class="post-content">
