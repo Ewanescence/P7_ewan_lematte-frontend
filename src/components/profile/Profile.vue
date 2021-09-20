@@ -99,8 +99,6 @@ export default {
                   }
                   break  
               }
-              console.log(this.displayPosts)
-              console.log(this.displayComments)
             }
         }
 }

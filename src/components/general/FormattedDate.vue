@@ -13,11 +13,9 @@
             }
         },
         async mounted() {
-
             const test = this.date.split('T')
             const splitDate = test[0].split('-')
             const splitTime = test[1].split(':')
-
             const splitedDate = {
                 'year': splitDate[0],
                 'month': splitDate[1],
@@ -26,7 +24,6 @@
                 'minutes':splitTime[1],
                 'seconds': splitTime[2].substring(0,2)
             }
-
             let month = ''
             switch (splitedDate.month) {
                 case '01':
@@ -65,8 +62,7 @@
                 case '12':
                     month = ' décembre'
                     break
-                }
-                
+            }
             return this.formattedDate = 'le ' + splitedDate.day + month + ' à ' + splitedDate.hours + ':' + splitedDate.minutes 
         }
     }

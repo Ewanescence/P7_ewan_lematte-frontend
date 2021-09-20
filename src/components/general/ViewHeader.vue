@@ -47,7 +47,6 @@
 </script>
 
 <style scoped>
-
     #header {
         display: flex;
         border-bottom: 2px solid white;
@@ -76,5 +75,4 @@
             border-left: 2px solid white;
         }
     }
-
 </style>

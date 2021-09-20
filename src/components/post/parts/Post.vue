@@ -3,7 +3,7 @@
     <div id="post-container">
         <div class="user-infos">
             <router-link :to="'/profile/' + post.name">
-                <ProfilePicture :src="post.imageUrl" :width="64" :height="64" />
+                <ProfilePicture v-if="isReceived" :src="post.imageUrl" :width="64" :height="64" />
             </router-link>
             <div class="content-header">
                 <router-link :to="'/profile/' + post.name">
