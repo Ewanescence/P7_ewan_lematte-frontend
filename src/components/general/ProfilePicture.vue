@@ -19,5 +19,6 @@
         border-radius: 50%;
         border: 2px solid white;
         object-fit: cover;
+        background-color: white;
     }
 </style>
